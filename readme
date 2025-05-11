@@ -1,0 +1,61 @@
+#prerequisite
+1.  terraform
+2.  aws cli
+3.  Create Key Pair (optional)
+
+############################# TERRAFORM ###############################################
+#ensure terraform is installed and exported to path
+  
+#download url: https://www.terraform.io/downloads.html
+  #example
+  nano ~/.bashrc
+  export PATH=$PATH:/c/terraformbins
+  source ~/.bashrc
+
+  $ terraform -v
+  Terraform v1.11.4
+  on windows_amd64
+  + provider registry.terraform.io/hashicorp/aws v5.97.0
+
+################################## AWS CLI #################################################
+#ensure AWS CLI is installed and configured
+#download url: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+C:\Program Files\Amazon\AWSCLIV2\aws.exe
+
+  #example (export to my gitbash):
+  nano ~/.bashrc
+  export PATH="/c/Program Files/Amazon/AWSCLIV2/:$PATH"
+  source ~/.bashrc
+
+  $ aws --version
+  aws-cli/2.15.44 Python/3.11.8 Windows/10 exe/AMD64 prompt/off
+
+  #cofigure Access
+
+  $ aws configure
+  AWS Access Key ID [****************YDBL]: 
+  AWS Secret Access Key [****************kF+h]: 
+  Default region name [us-east-1]: 
+  Default output format [json]: 
+
+
+################################### KEY PAIR ###################################
+mkdir ~/.ssh/ -p
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/yoobee-aws-key
+
+######################################## DEPLOYMENT ##############################
+
+#init
+terraform init
+
+#validate
+terraform validate
+
+#plan
+terraform plan
+
+#apply
+terraform apply
+
+#destroy 
+terraform destroy
