@@ -1,43 +1,70 @@
+target:
+
+1. Create VPC
+2. Create Internetgateway
+3. Create Routetable allowing internet connection
+4. Create 2 subnet: public subnet, private subnet
+5. Associate route table with each subnet
+6. Create EC2 with openvpn image
+7. Create Target group
+8. Create Load Balancer
+9.
+
 #prerequisite
+
 1.  terraform
 2.  aws cli
 3.  Create Key Pair (optional)
 
+#variables(variables.tf)
+prefix for tags prefix such as: yoobee-vpc
+region region to deploy
+vpc_cidr  
+public_subnet_cidr
+private_subnet_cidr
+public_az
+private_az
+custom_ami_id specified openvpn ami. using default ami in each region if not defined
+openvpn_ami_map define the default ami in each region.
+
 ############################# TERRAFORM ###############################################
 #ensure terraform is installed and exported to path
-  
-#download url: https://www.terraform.io/downloads.html
-  #example
-  nano ~/.bashrc
-  export PATH=$PATH:/c/terraformbins
-  source ~/.bashrc
 
-  $ terraform -v
-  Terraform v1.11.4
-  on windows_amd64
-  + provider registry.terraform.io/hashicorp/aws v5.97.0
+configure environment variables
+
+#download url: https://www.terraform.io/downloads.html
+
+#example
+nano ~/.bashrc
+export PATH=$PATH:/c/terraformbins
+source ~/.bashrc
+
+$ terraform -v
+Terraform v1.11.4
+on windows_amd64
+
+- provider registry.terraform.io/hashicorp/aws v5.97.0
 
 ################################## AWS CLI #################################################
 #ensure AWS CLI is installed and configured
 #download url: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 C:\Program Files\Amazon\AWSCLIV2\aws.exe
 
-  #example (export to my gitbash):
-  nano ~/.bashrc
-  export PATH="/c/Program Files/Amazon/AWSCLIV2/:$PATH"
-  source ~/.bashrc
+#example (export to my gitbash):
+nano ~/.bashrc
+export PATH="/c/Program Files/Amazon/AWSCLIV2/:$PATH"
+source ~/.bashrc
 
-  $ aws --version
-  aws-cli/2.15.44 Python/3.11.8 Windows/10 exe/AMD64 prompt/off
+$ aws --version
+aws-cli/2.15.44 Python/3.11.8 Windows/10 exe/AMD64 prompt/off
 
-  #cofigure Access
+#cofigure Access
 
-  $ aws configure
-  AWS Access Key ID [****************YDBL]: 
-  AWS Secret Access Key [****************kF+h]: 
-  Default region name [us-east-1]: 
-  Default output format [json]: 
-
+$ aws configure
+AWS Access Key ID [****************YDBL]:
+AWS Secret Access Key [****************kF+h]:
+Default region name [us-east-1]:
+Default output format [json]:
 
 ################################### KEY PAIR ###################################
 mkdir ~/.ssh/ -p
@@ -57,5 +84,5 @@ terraform plan
 #apply
 terraform apply
 
-#destroy 
+#destroy
 terraform destroy

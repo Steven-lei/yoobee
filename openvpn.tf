@@ -56,23 +56,17 @@ resource "aws_security_group" "openvpn_sg" {
   }
 }
 
-locals {
-  openvpn_ami_id = (
-    contains(keys(var.openvpn_ami_map), var.region) ?
-    var.openvpn_ami_map[var.region] :
-    var.custom_ami_id
-  )
-}
-resource "aws_instance" "openvpn" {
-  ami                    = local.openvpn_ami_id       # Use a valid OpenVPN AMI ID
-  instance_type          = "t2.micro" # Free tier eligible
-  subnet_id              = aws_subnet.public_subnet.id
-  vpc_security_group_ids = [aws_security_group.openvpn_sg.id]
-  key_name               = aws_key_pair.yoobee.key_name   #var.key_name
 
-  associate_public_ip_address = true
+# resource "aws_instance" "openvpn" {
+#   ami                    = var.openvpn_ami_map[var.region]       # Use a valid OpenVPN AMI ID
+#   instance_type          = "t2.micro" # Free tier eligible
+#   subnet_id              = values(aws_subnet.vpn_subnets)[0].id
+#   vpc_security_group_ids = [aws_security_group.openvpn_sg.id]
+#   key_name               = aws_key_pair.yoobee.key_name   #var.key_name
 
-  tags = {
-    Name = "${var.prefix}-openvpn"
-  }
-}
+#   associate_public_ip_address = true
+
+#   tags = {
+#     Name = "${var.prefix}-openvpn"
+#   }
+# }

@@ -15,39 +15,18 @@ variable "vpc_cidr" {
   default = "10.10.0.0/16"
 }
 
-variable "public_subnet_cidr" {
-  description = "CIDR block for the public subnet"
-  default     = "10.10.10.0/24"
+variable "vpn_azs" {
+  description = "Availability zone for the vpn subnet"
+  default     = ["us-east-1a"]
 }
-variable "private_subnet_cidr" {
-  description = "CIDR block for the private subnet"
-  default     = "10.10.100.0/24"
-}
-variable "public_az" {
+
+variable "public_azs" {
   description = "Availability zone for the public subnet"
-  default     = "us-east-1a"
+  default     = ["us-east-1a","us-east-1b","us-east-1c"]
 }
-variable "private_az" {
+variable "private_azs" {
   description = "Availability zone for the private subnet"
-  default     = "us-east-1b"
-}
-
-#default AMIs
-variable "openvpn_ami_map" {
-  description = "Map of OpenVPN AMIs per region"
-  type = map(string)
-  default = {
-    "us-east-1"      = "ami-0f88e80871fd81e91"
-    "ap-southeast-2" = "ami-0a1234567890abcd1"
-    # Add more regions and corresponding AMI IDs as needed
-  }
-}
-
-
-variable "custom_ami_id" {
-  description = "AMI ID for OpenVPN"
-  type        = string
-  default = "ami-0f88e80871fd81e91"
+  default     = ["us-east-1b","us-east-1c"]
 }
 
 # variable "key_name" {
@@ -55,3 +34,8 @@ variable "custom_ami_id" {
 #   type        = string
 # }
 
+variable "alb_certificate_arn" {
+  description = "ARN of the SSL certificate in ACM"
+  type        = string
+  default = "arn:aws:acm:us-east-1:615299744642:certificate/adb88281-3883-4526-9e52-2ae10d07405a"
+}

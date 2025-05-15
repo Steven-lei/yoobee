@@ -41,3 +41,23 @@ resource "aws_security_group" "web_sg" {
     Name = "${var.prefix}-web-sg"
   }
 }
+# resource "aws_instance" "testwebserver" {
+#   ami                    = var.webserver_ami_id      # Use the gold image with wordpress and cloud agent
+#   instance_type          = "t2.micro" # Free tier eligible
+#   subnet_id              = values(aws_subnet.public_subnets)[0].id
+#   vpc_security_group_ids = [aws_security_group.web_sg.id]
+#   key_name               = aws_key_pair.yoobee.key_name   #var.key_name
+
+#   user_data = <<-EOF
+#               #!/bin/bash
+#               apt update -y
+#               apt install -y apache2
+#               systemctl start apache2
+#               systemctl enable apache2
+#               echo "<html><body><h1>Private IP: $(hostname -I)</h1></body></html>" > /var/www/html/index.html
+#               EOF
+
+#   tags = {
+#     Name = "${var.prefix}-testwebserver"
+#   }
+# }
