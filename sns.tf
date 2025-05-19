@@ -1,5 +1,3 @@
-
-
 #SNS Topic
 resource "aws_sns_topic" "web_server_alerts" {
   name = "web-server-state-notifications"

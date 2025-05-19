@@ -66,26 +66,26 @@ resource "aws_lb_target_group" "web_tg" {
   }
 }
 
-#create Listener
-resource "aws_lb_listener" "http_listener" {
-  load_balancer_arn = aws_lb.web_alb.arn
-  port              = 80
-  protocol          = "HTTP"
+# #create Listener
+# resource "aws_lb_listener" "http_listener" {
+#   load_balancer_arn = aws_lb.web_alb.arn
+#   port              = 80
+#   protocol          = "HTTP"
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.web_tg.arn
-  }
-  # default_action {   #redirect to HTTPS
-  #   type = "redirect"
+#   default_action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.web_tg.arn
+#   }
+#   # default_action {   #redirect to HTTPS
+#   #   type = "redirect"
 
-  #   redirect {
-  #     port        = "443"
-  #     protocol    = "HTTPS"
-  #     status_code = "HTTP_301"
-  #   }
-  # }
-}
+#   #   redirect {
+#   #     port        = "443"
+#   #     protocol    = "HTTPS"
+#   #     status_code = "HTTP_301"
+#   #   }
+#   # }
+# }
 
 #a more stricker policy: ELBSecurityPolicy-TLS-1-2-2021-06
 resource "aws_lb_listener" "https_listener" {
