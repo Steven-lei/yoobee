@@ -3,18 +3,26 @@ target:
 1. Create VPC
 2. Create Internetgateway
 3. Create Routetable allowing internet connection
-4. Create 2 subnet: public subnet, private subnet
+4. Create subnets: vpnsubnets, public subnets, private subnets
+4. Create SecurityGroup: vpn,web,db  vpn->web->db
 5. Associate route table with each subnet
 6. Create EC2 with openvpn image
-7. Create Target group
+7. Create launch template
+7. Create Autoscaling group
 8. Create Load Balancer
-9.
+9. create SNS (for launching EC2,terminating EC2, creating Snapshot)
+10. Create Lambda function to create Snapshot(Triggered by scheduler)
+11. Create RDS.
+12. Create Webserver(using golden image)
+
 
 #prerequisite
 
 1.  terraform
 2.  aws cli
 3.  Create Key Pair (optional)
+4.  Create Secrets for RDS
+
 
 #variables(variables.tf)
 prefix for tags prefix such as: yoobee-vpc
@@ -70,6 +78,23 @@ Default output format [json]:
 mkdir ~/.ssh/ -p
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/yoobee-aws-key
 
+
+#################################### Secret Manager ###########################
+aws secretsmanager create-secret \
+  --name rds-secret \
+  --description "Credentials for MySQL RDS instance" \
+  --secret-string '{"username":"wordpress","password":"StrongP0ssw0rd123"}'
+
+
+aws secretsmanager update-secret \
+  --secret-id rds-secret \
+  --secret-string '{"username":"wordpress","password":"StrongP0ssw0rd123"}'
+
+
+#secrets are paid services, delete it if not needed
+aws secretsmanager delete-secret \
+  --secret-id rds-secret \
+  --force-delete-without-recovery
 ######################################## DEPLOYMENT ##############################
 
 #init

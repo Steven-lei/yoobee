@@ -52,12 +52,27 @@ resource "aws_route_table" "public-route" {
   }
 }
 
+# #Elastic IP for NAT gateway
+# resource "aws_eip" "nat" {
+#   tags = {
+#     Name = "NAT-eip"
+#   }
+# }
+
+# resource "aws_nat_gateway" "nat" {
+#   allocation_id = aws_eip.nat.id
+#   subnet_id     = values(aws_subnet.public_subnets)[0].id  
+# }
+
 # Create Private Route Table
 resource "aws_route_table" "private-route" {
   vpc_id = aws_vpc.main-vpc.id
-
+  # route{
+  #   cidr_block = "0.0.0.0/0"
+  #   nat_gateway_id = aws_nat_gateway.nat.id
+  # }
   tags = {
-    Name = "${var.prefix}-public-routetable"
+    Name = "${var.prefix}-private-routetable"
   }
 }
 
@@ -90,7 +105,7 @@ resource "aws_subnet" "public_subnets" {
 resource "aws_subnet" "private_subnets" {
   for_each = toset(var.private_azs)
   vpc_id            = aws_vpc.main-vpc.id
-  cidr_block = cidrsubnet(var.vpc_cidr, 8, 100+index(var.public_azs, each.key))
+  cidr_block = cidrsubnet(var.vpc_cidr, 8, 100+index(var.private_azs, each.key))
   availability_zone = each.key
 
   tags = {
