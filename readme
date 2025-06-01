@@ -7,14 +7,14 @@ target:
 4. Create SecurityGroup: vpn,web,db  vpn->web->db
 5. Associate route table with each subnet
 6. Create EC2 with openvpn image
-7. Create launch template
+7. Create launch template(using golden image)
 7. Create Autoscaling group
-8. Create Load Balancer
+8. Create Load Balancer (using certificate from ACM)
 9. create SNS (for launching EC2,terminating EC2, creating Snapshot)
 10. Create Lambda function to create Snapshot(Triggered by scheduler)
 11. Create RDS.
-12. Create Webserver(using golden image)
-
+12. Create Webserver(to create a test webserver and use it to create a golden image)
+13. Create S3 (Lambda function writes data to it )
 
 #prerequisite
 
