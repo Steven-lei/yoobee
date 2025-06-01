@@ -56,17 +56,45 @@ resource "aws_security_group" "openvpn_sg" {
   }
 }
 
+#Elastic IP for VPN access server
+resource "aws_eip" "vpnserver" {
+  tags = {
+    Name = "VPN-eip"
+  }
+}
 
-# resource "aws_instance" "openvpn" {
-#   ami                    = var.openvpn_ami_map[var.region]       # Use a valid OpenVPN AMI ID
-#   instance_type          = "t2.micro" # Free tier eligible
-#   subnet_id              = values(aws_subnet.vpn_subnets)[0].id
-#   vpc_security_group_ids = [aws_security_group.openvpn_sg.id]
-#   key_name               = aws_key_pair.yoobee.key_name   #var.key_name
+resource "aws_instance" "openvpn" {
+  ami                    = var.openvpn_ami_map[var.region]       # Use a valid OpenVPN AMI ID
+  instance_type          = "t2.micro" # Free tier eligible
+  subnet_id              = values(aws_subnet.vpn_subnets)[0].id
+  vpc_security_group_ids = [aws_security_group.openvpn_sg.id]
+  key_name               = aws_key_pair.yoobee.key_name   #var.key_name
 
-#   associate_public_ip_address = true
+  associate_public_ip_address = true
 
-#   tags = {
-#     Name = "${var.prefix}-openvpn"
-#   }
-# }
+  tags = {
+    Name = "${var.prefix}-openvpn"
+  }
+}
+
+resource "aws_eip_association" "vpnserver_assoc" {
+  instance_id   = aws_instance.openvpn.id
+  allocation_id = aws_eip.vpnserver.id
+}
+
+output "vpnserver_public_ip" {
+  description = "the IP of VPN access server, use a VPN client to connect with after configuring"
+  #value = aws_instance.openvpn.public_ip
+  value = aws_eip.vpnserver.public_ip
+}
+output "vpnserver_private_ip" {
+
+  value = aws_instance.openvpn.private_ip
+}
+output "vpnserver_ssh_connect" {
+  description = "SSH command to connect to and confiugre the VPN Server"
+  value = <<-EOT
+VPN server has been launched. Be aware that the username could be root, ec2-user, or ubuntu depending on the AMI.
+ssh -i ~/.ssh/yoobee-aws-key openvpnas@${aws_eip.vpnserver.public_ip}
+EOT
+}

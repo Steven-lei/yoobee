@@ -1,5 +1,5 @@
 data "aws_secretsmanager_secret" "db_secret" {
-  name = "rds-secret"
+  name = "rds/wordpress"
 }
 data "aws_secretsmanager_secret_version" "db_secret_version" {
   secret_id = data.aws_secretsmanager_secret.db_secret.id
@@ -7,6 +7,21 @@ data "aws_secretsmanager_secret_version" "db_secret_version" {
 locals {
   secret_values = jsondecode(data.aws_secretsmanager_secret_version.db_secret_version.secret_string)
 }
+
+#update the dbhost after RDS created
+resource "aws_secretsmanager_secret_version" "updated_db_secret" {
+  secret_id     = data.aws_secretsmanager_secret.db_secret.id
+
+  secret_string = jsonencode({
+    username = local.secret_values.username
+    password = local.secret_values.password
+    db_name  = local.secret_values.db_name
+    dbhost   = aws_db_instance.rds.endpoint
+  })
+
+  depends_on = [aws_db_instance.rds] # update after RDS Created
+}
+
 
 # Security group for the RDS instance
 resource "aws_security_group" "rds_sg" {
@@ -58,7 +73,7 @@ resource "aws_db_instance" "rds" {
   identifier           = "${var.prefix}-db"
   username             = local.secret_values.username
   password             = local.secret_values.password
-  db_name              = "wordpress"
+  db_name              = local.secret_values.db_name
   publicly_accessible  = false
   multi_az             = false
   backup_retention_period = 0
@@ -67,7 +82,7 @@ resource "aws_db_instance" "rds" {
   db_subnet_group_name = aws_db_subnet_group.rds_subnet_group.name
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   #allow ssl connection only
-  parameter_group_name = aws_db_parameter_group.rds_ssl_enforce.name
+  #parameter_group_name = aws_db_parameter_group.rds_ssl_enforce.name
   tags = {
     Name = "Free RDS"
     Env  = "Dev"
@@ -83,7 +98,7 @@ resource "aws_db_instance" "rds" {
 #   identifier                  = "${var.prefix}-db"
 # username             = local.secret_values.username
 # password             = local.secret_values.password
-# db_name              = "wordpress"
+#  db_name              = local.secret_values.db_name
 #   publicly_accessible         = false
 #   multi_az                    = true                     # Enables standby in another AZ
 #   backup_retention_period     = 7                        # Recommended when multi_az = true
@@ -100,7 +115,19 @@ resource "aws_db_instance" "rds" {
 # }
 
 
-output "rds_endpoint" {
-  description = "The RDS endpoint"
-  value       = aws_db_instance.rds.endpoint
-}
+# #run db init
+# resource "null_resource" "db_init" {
+#   depends_on = [aws_db_instance.mydb]
+
+#   provisioner "local-exec" {
+#     command = <<EOT
+#     mysql -h ${aws_db_instance.rds.address} -u ${aws_db_instance.rds.username} -p${aws_db_instance.rds.password} ${aws_db_instance.rds.name} < ./init.sql
+#     EOT
+#   }
+# }
+
+
+# output "rds_endpoint" {
+#   description = "The RDS endpoint"
+#   value       = aws_db_instance.rds.endpoint
+# }

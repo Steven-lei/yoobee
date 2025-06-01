@@ -6,7 +6,7 @@ variable "prefix" {
 variable "region" {
   description = "region"
   type=string
-  default = "us-east-1"
+  default = "ap-southeast-2"
 }
 
 variable "vpc_cidr" {
@@ -17,16 +17,16 @@ variable "vpc_cidr" {
 
 variable "vpn_azs" {
   description = "Availability zone for the vpn subnet"
-  default     = ["us-east-1a"]
+  default     = ["ap-southeast-2a"]
 }
 
 variable "public_azs" {
   description = "Availability zone for the public subnet"
-  default     = ["us-east-1a","us-east-1b","us-east-1c"]
+  default     = ["ap-southeast-2b","ap-southeast-2c"]
 }
 variable "private_azs" {
   description = "Availability zone for the private subnet"
-  default     = ["us-east-1b","us-east-1c"]
+  default     = ["ap-southeast-2b","ap-southeast-2c"]
 }
 
 # variable "key_name" {
@@ -37,5 +37,5 @@ variable "private_azs" {
 variable "alb_certificate_arn" {
   description = "ARN of the SSL certificate in ACM"
   type        = string
-  default = "arn:aws:acm:us-east-1:615299744642:certificate/adb88281-3883-4526-9e52-2ae10d07405a"
+  default = "arn:aws:acm:ap-southeast-2:615299744642:certificate/87dad769-42b8-448b-a212-be20145070dc"
 }

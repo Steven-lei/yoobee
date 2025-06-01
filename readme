@@ -81,20 +81,21 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/yoobee-aws-key
 
 #################################### Secret Manager ###########################
 aws secretsmanager create-secret \
-  --name rds-secret \
+  --name rds/wordpress \
   --description "Credentials for MySQL RDS instance" \
-  --secret-string '{"username":"wordpress","password":"StrongP0ssw0rd123"}'
+  --secret-string '{"db_name":"wordpress", "username":"wordpress","password":"StrongP0ssw0rd123","dbhost":""}'
 
-
-aws secretsmanager update-secret \
-  --secret-id rds-secret \
-  --secret-string '{"username":"wordpress","password":"StrongP0ssw0rd123"}'
+#
+# do net need to update the secrets as we have updated it using t /erraform
+# aws secretsmanager update-secret \
+#   --secret-id rds/wordpress \
+#   --secret-string '{"db_name":"wordpress", "username":"wordpress","password":"StrongP0ssw0rd123","dbhost":"yoobee-db.ckryao66wbec.us-east-1.rds.amazonaws.com"}'
 
 
 #secrets are paid services, delete it if not needed
 aws secretsmanager delete-secret \
-  --secret-id rds-secret \
-  --force-delete-without-recovery
+  --secret-id rds/wordpress \
+  --force-delete-without-recovery 
 ######################################## DEPLOYMENT ##############################
 
 #init

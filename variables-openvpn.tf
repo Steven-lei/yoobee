@@ -14,9 +14,3 @@ variable "openvpn_ami_map" {
   }
 }
 
-
-# variable "custom_ami_id" {
-#   description = "AMI ID for OpenVPN"
-#   type        = string
-#   default = "ami-0f88e80871fd81e91"
-# }
